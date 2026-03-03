@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Gold & Silver</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(135deg,#1f1c2c,#928dab);
+            color: white;
+            text-align: center;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            padding:20px;
+            margin:20px auto;
+            width:300px;
+            border-radius:15px;
+        }
+        canvas {
+            background:white;
+            border-radius:10px;
+            margin-top:20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📊 Live Gold & Silver Rates</h1>
+
+<div class="card">
+    <h2>Gold 22K</h2>
+    <h3 id="gold">Loading...</h3>
+</div>
+
+<div class="card">
+    <h2>Silver</h2>
+    <h3 id="silver">Loading...</h3>
+</div>
+
+<canvas id="priceChart" width="600" height="300"></canvas>
+
+<script>
+let goldData = [];
+let silverData = [];
+let labels = [];
+
+const ctx = document.getElementById('priceChart').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Gold 22K',
+                data: goldData,
+                borderColor: 'gold',
+                fill: false
+            },
+            {
+                label: 'Silver',
+                data: silverData,
+                borderColor: 'silver',
+                fill: false
+            }
+        ]
+    }
+});
+
+async function fetchData() {
+    const response = await fetch('/api');
+    const data = await response.json();
+
+    document.getElementById('gold').innerText = "₹ " + data.gold + " /10g";
+    document.getElementById('silver').innerText = "₹ " + data.silver + " /kg";
+
+    labels.push(data.time);
+    goldData.push(data.gold);
+    silverData.push(data.silver);
+
+    if (labels.length > 20) {
+        labels.shift();
+        goldData.shift();
+        silverData.shift();
+    }
+
+    chart.update();
+}
+
+setInterval(fetchData, 10000);
+fetchData();
+</script>
+
+</body>
+</html>
