@@ -4,22 +4,46 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-def fetch_prices():
-    usd_inr = yf.Ticker("USDINR=X").history(period="1d")["Close"].iloc[-1]
+# ===== SETTINGS =====
+MAKING_CHARGE_GOLD = 12   # %
+MAKING_CHARGE_SILVER = 8  # %
+GST = 3                   # %
 
+def fetch_prices():
+    # Fetch live prices
     gold_usd = yf.Ticker("GC=F").history(period="1d")["Close"].iloc[-1]
     silver_usd = yf.Ticker("SI=F").history(period="1d")["Close"].iloc[-1]
+    usd_inr = yf.Ticker("USDINR=X").history(period="1d")["Close"].iloc[-1]
 
-    gold_inr = gold_usd * usd_inr
-    silver_inr = silver_usd * usd_inr
+    # Convert to INR per ounce
+    gold_inr_per_ounce = gold_usd * usd_inr
+    silver_inr_per_ounce = silver_usd * usd_inr
 
-    gold_22k = (gold_inr / 31.1035) * 10 * 0.916
-    silver_kg = (silver_inr / 31.1035) * 1000
+    # Convert to grams
+    gold_per_gram = gold_inr_per_ounce / 31.1035
+    silver_per_gram = silver_inr_per_ounce / 31.1035
+
+    # Gold prices
+    gold_24k_10g = gold_per_gram * 10
+    gold_22k_10g = gold_24k_10g * 0.916
+
+    # Silver price per kg
+    silver_per_kg = silver_per_gram * 1000
+
+    # Vijayawada Jewellery Estimation
+    vijayawada_22k = gold_22k_10g * (1 + MAKING_CHARGE_GOLD/100)
+    vijayawada_22k *= (1 + GST/100)
+
+    vijayawada_silver = silver_per_kg * (1 + MAKING_CHARGE_SILVER/100)
+    vijayawada_silver *= (1 + GST/100)
 
     return {
         "time": datetime.now().strftime("%H:%M:%S"),
-        "gold": round(gold_22k, 2),
-        "silver": round(silver_kg, 2)
+        "gold_24k_10g": round(gold_24k_10g, 2),
+        "gold_22k_10g": round(gold_22k_10g, 2),
+        "silver_per_kg": round(silver_per_kg, 2),
+        "vijayawada_22k_est": round(vijayawada_22k, 2),
+        "vijayawada_silver_est": round(vijayawada_silver, 2)
     }
 
 @app.route("/")
