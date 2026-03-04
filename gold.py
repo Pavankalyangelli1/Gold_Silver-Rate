@@ -37,14 +37,14 @@ def fetch_prices():
     silver_making = 8  # %
     gst = 3  # %
 
-    vijayawada_22k = gold_22k_10g * (1 + making_charge/100)
-    vijayawada_22k *= (1 + gst/100)
+    Vijayawada_22k = gold_22k_10g * (1 + making_charge/100)
+    Vijayawada_22k *= (1 + gst/100)
 
     # Silver jewellery estimation (₹ per kg)
-    vijayawada_silver = silver_per_kg * (1 + silver_making/100)
-    vijayawada_silver *= (1 + gst/100)
+    Vijayawada_silver = silver_per_kg * (1 + silver_making/100)
+    Vijayawada_silver *= (1 + gst/100)
 
-    return gold_24k_10g, gold_22k_10g, silver_per_kg, vijayawada_22k, vijayawada_silver
+    return gold_24k_10g, gold_22k_10g, silver_per_kg, Vijayawada_22k, Vijayawada_silver
 
 
 def save_to_excel(data):
