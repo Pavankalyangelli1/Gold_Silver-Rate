@@ -31,19 +31,19 @@ def fetch_prices():
     silver_per_kg = silver_per_gram * 1000
 
     # Vijayawada Jewellery Estimation
-    vijayawada_22k = gold_22k_10g * (1 + MAKING_CHARGE_GOLD/100)
-    vijayawada_22k *= (1 + GST/100)
+    Vijayawada_22k = gold_22k_10g * (1 + MAKING_CHARGE_GOLD/100)
+    Vijayawada_22k *= (1 + GST/100)
 
-    vijayawada_silver = silver_per_kg * (1 + MAKING_CHARGE_SILVER/100)
-    vijayawada_silver *= (1 + GST/100)
+    Vijayawada_silver = silver_per_kg * (1 + MAKING_CHARGE_SILVER/100)
+    Vijayawada_silver *= (1 + GST/100)
 
     return {
         "time": datetime.now().strftime("%H:%M:%S"),
         "gold_24k_10g": round(gold_24k_10g, 2),
         "gold_22k_10g": round(gold_22k_10g, 2),
         "silver_per_kg": round(silver_per_kg, 2),
-        "vijayawada_22k_est": round(vijayawada_22k, 2),
-        "vijayawada_silver_est": round(vijayawada_silver, 2)
+        "vijayawada_22k_est": round(Vijayawada_22k, 2),
+        "vijayawada_silver_est": round(Vijayawada_silver, 2)
     }
 
 @app.route("/")
